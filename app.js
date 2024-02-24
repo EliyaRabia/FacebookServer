@@ -6,21 +6,21 @@ app.use(cors());
 const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
 const usersRoute = require('./routes/users');
-const postsRoute = require("./routes/posts");
 
-require("custom-env").env(process.env.NODE_ENV, "./config");
 
-mongoose.connect(process.env.CONNECTION_STRING, {
+//require("custom-env").env(process.env.NODE_ENV, "./config");
+
+mongoose.connect("mongodb://localhost:27017/DB", {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
 
 app.use(express.static('public'));
-app.use(bodyParser.urlencoded(extend = true));
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
 app.use("/api/users", usersRoute); 
-app.use("/api/users/:id/posts", postsRoute); 
+//app.use("/api/users/:id/posts", postsRoute); 
 
 
-app.listen(process.env.PORT);
+app.listen(8080);
 
