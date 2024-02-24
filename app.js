@@ -1,15 +1,26 @@
 const express = require('express');
+const app = express();
 const bodyParser = require('body-parser');
 const cors = require('cors');
+app.use(cors());
 const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
-const app = express();
-const custumeEnv= require('custom-env');
-custumeEnv.env(process.env.NODE_ENV, './config');
+const usersRoute = require('./routes/users');
+const postsRoute = require("./routes/posts");
+
+require("custom-env").env(process.env.NODE_ENV, "./config");
+
+mongoose.connect(process.env.CONNECTION_STRING, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
+
 app.use(express.static('public'));
-app.use(cors());
 app.use(bodyParser.urlencoded(extend = true));
 app.use(express.json());
-mongoose.connect('mongodb://localhost:27017/ecommerce', { useNewUrlParser: true, useUnifiedTopology: true });
-app.listen(Proccess.env.PORT);
+app.use("/api/users", usersRoute); 
+app.use("/api/users/:id/posts", postsRoute); 
+
+
+app.listen(process.env.PORT);
 
