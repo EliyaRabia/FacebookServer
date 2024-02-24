@@ -11,7 +11,7 @@ const createUser = async (username, password, displayName, photo) => {
   try {
     return await user.save();
   } catch (error) {
-    res.status(404).send(error);
+    console.log(error);
   }
 };
 
@@ -23,8 +23,7 @@ const getUser = async (username, password) => {
   }
 };
 
-const getUserByUsername = async (req, res) => {
-  const { username } = req.body.username;
+const getUserByUsername = async (username) => {
   try {
     return await User.findOne({ username }).exec();
   } catch (error) {
