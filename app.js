@@ -6,6 +6,7 @@ app.use(cors());
 const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
 const usersRoute = require('./routes/users');
+const tokenRoutes = require("./routes/tokens.js"); 
 
 
 //require("custom-env").env(process.env.NODE_ENV, "./config");
@@ -19,6 +20,7 @@ app.use(express.static('public'));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
 app.use("/api/users", usersRoute); 
+app.use("/api/tokens", tokenRoutes); 
 //app.use("/api/users/:id/posts", postsRoute); 
 
 
