@@ -8,9 +8,14 @@ const jwt = require('jsonwebtoken');
 const usersRoute = require('./routes/users');
 const tokenRoutes = require("./routes/tokens.js"); 
 
+// if mistake in url, redirect to the correct one
+app.get('/', (req, res) => {
+  res.redirect('http://localhost:3000' + req.originalUrl);
+});
 
 //require("custom-env").env(process.env.NODE_ENV, "./config");
-
+app.use(bodyParser.json({ limit: '10mb' }));
+app.use(bodyParser.urlencoded({ limit: '10mb', extended: true }));
 mongoose.connect("mongodb://localhost:27017/DB", {
   useNewUrlParser: true,
   useUnifiedTopology: true,
