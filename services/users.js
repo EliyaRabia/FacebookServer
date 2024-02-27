@@ -34,7 +34,7 @@ const getUserByUsername = async (username) => {
 
 const getUserById = async (id) => {
   try {
-    return await User.findById(id);
+    return await User.findById(id).select('-password').exec();
   } catch (error) {
     res.status(404).send(error);
     return null;
