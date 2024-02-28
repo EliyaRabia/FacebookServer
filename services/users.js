@@ -7,6 +7,10 @@ const createUser = async (username, password, displayName, photo) => {
     password,
     displayName,
     photo,
+    postList: [],
+    friendsList: [],
+    friendRequests: [],
+    friendRequestsSent: []
   });
   try {
     return await user.save();
@@ -60,13 +64,13 @@ const updateUser = async (id, username, password, displayName, photo) => {
       return null;
     Object.assign(user, { username });
   }
-  if (password !== user.password) {
+  if (password !== user.password && password !== "" && password !== undefined && password !== null) {
     Object.assign(user, { password });
   }
   if (displayName !== user.displayName) {
     Object.assign(user, { displayName });
   }
-  if (photo !== user.photo) {
+  if (photo !== user.photo && photo !== "" && photo !== undefined && photo !== null) {
     Object.assign(user, { photo });
   }
   return await user.save();
@@ -78,7 +82,7 @@ const deleteUser = async (id) => {
   if (!user) 
     return null;
   await user.deleteOne();
-  return user;
+  return true;
 };
 
 
