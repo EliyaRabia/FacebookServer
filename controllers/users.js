@@ -6,6 +6,7 @@ const createUser = async (req, res) => {
     const password = req.body.password;
     const displayName = req.body.displayName;
     const photo = req.body.photo;
+    console.log("hey");
     user = await userService.getUserByUsername(username);
     if (!user) {
         res.status(200).json(await userService.createUser(username, password, displayName, photo));
@@ -57,10 +58,8 @@ const getUserById = async (req, res) => {
   const token = req.headers.authorization;
 
   try {
-      console.log(token);
       // Verify the token
       const decoded = jwt.verify(token, "key");
-      console.log(decoded);
 
       // Check if the token's user id matches the requested user id
       if (decoded.id !== id) {
@@ -79,26 +78,36 @@ const getUserById = async (req, res) => {
       res.status(403).send('Invalid token');
   }
 }
+getUserByIdWithPassword = async (req, res) => {
+  const id = req.params.id;
+  user = await userService.getUserByIdWithPassword(id);
+  if (user) {
+    res.status(200).json(user);
+  } else {
+    res.status(404).send("User not found");
+  }
+};
 
 const updateUser = async (req, res) => {
+    console.log("hey");
     const id = req.params.id;
     const username = req.body.username;
     const password = req.body.password;
     const displayName = req.body.displayName;
     const photo = req.body.photo;
-    user = await userService.updateUser(id, username, password, displayName, photo);
-    if (user) {
-        res.status(200).json(user);
+    user = await userService.updateUser(id,username, password, displayName, photo);
+    if (user !== null) {
+        res.status(200).send('User updated successfully');
     }else{
-        res.status(404).send('User not found');
+        res.status(404).send('User not found / Username already exists');
     }
 }
 
 const deleteUser = async (req, res) => {
     const id = req.params.id;
-    user = await userService.deleteUser(id);
-    if (user) {
-        res.status(200).json(user);
+    isDeleted = await userService.deleteUser(id);
+    if (isDeleted) {
+        res.status(200).send('User deleted successfully');
     }else{
         res.status(404).send('User not found');
     }
@@ -110,6 +119,7 @@ module.exports = {
   getUserByUsername,
   getUser,
   getUserById,
+  getUserByIdWithPassword,
   updateUser,
   deleteUser,
 };
