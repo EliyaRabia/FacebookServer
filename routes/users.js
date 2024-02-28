@@ -8,6 +8,7 @@ router.route('/')
 
 router
   .route("/:id")
+  .get(userController.getUserByIdWithPassword)
   .get(userController.getUserById)
   .put(userController.updateUser)
   .delete(userController.deleteUser);
