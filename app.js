@@ -7,6 +7,7 @@ const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
 const usersRoute = require('./routes/users');
 const tokenRoutes = require("./routes/tokens.js"); 
+const postsRoute = require("./routes/posts");
 
 // if mistake in url, redirect to the correct one
 app.get('/', (req, res) => {
@@ -26,7 +27,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
 app.use("/api/users", usersRoute); 
 app.use("/api/tokens", tokenRoutes); 
-//app.use("/api/users/:id/posts", postsRoute); 
+app.use("/api/users/:id/posts", postsRoute); 
 
 
 app.listen(8080);
