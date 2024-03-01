@@ -21,4 +21,8 @@ router.route("/:id/posts/:pid")
   .put(postController.updatePost)
   .delete(postController.deletePost);
 
+router.route("/:id/frineds")
+.post(userController.addFriend)
+.get(userController.getAllFriends);
+
 module.exports = router;
