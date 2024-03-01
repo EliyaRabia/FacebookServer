@@ -1,5 +1,6 @@
 const userService = require('../services/users');
 const jwt = require('jsonwebtoken');
+const postSevice = require('../services/posts');
 
 const createUser = async (req, res) => {
     const username = req.body.username;
@@ -105,6 +106,7 @@ const updateUser = async (req, res) => {
 
 const deleteUser = async (req, res) => {
     const id = req.params.id;
+    await postSevice.deleteUserPosts(id);
     isDeleted = await userService.deleteUser(id);
     if (isDeleted) {
         res.status(200).send('User deleted successfully');

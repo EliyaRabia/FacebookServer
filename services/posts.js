@@ -7,5 +7,18 @@ const getAllPosts = async (friendId) =>{
       } catch (error) {
         res.status(404).send(error);
       }
+};
 
+const createPost = async (newPost) => {
+    return await newPost.save();
+}
+
+const deleteUserPosts = async (userId) => {
+    return await Post.deleteMany({ idUserName: userId });
+}
+
+module.exports = {
+    getAllPosts,
+    createPost,
+    deleteUserPosts
 };

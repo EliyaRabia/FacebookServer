@@ -21,6 +21,7 @@ const PostSchema = new Schema({
     },
     pictures:{
         type: Object,
+        required: false
     },
     time:{
         type:Date,
