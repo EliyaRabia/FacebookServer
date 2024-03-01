@@ -14,6 +14,10 @@ router
   .delete(userController.deleteUser);
 
 router.route('/:id/posts')
-  .get(postController.getAllPosts)
+  // .get(postController.getAllPosts)
   .post(postController.createPost);
+
+router.route("/:id/posts/:pid")
+  .delete(postController.deletePost);
+
 module.exports = router;

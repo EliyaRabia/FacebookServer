@@ -3,20 +3,27 @@ const jwt = require('jsonwebtoken');
 const Post = require('../models/posts');
 const User = require('../models/users');
 
-const getAllPosts = async(req, res) => {
-    const friendId = req.params.id;
-    posts = await postService.getAllPosts(friendId);
-    if (posts) {
-        res.status(200).json(posts);
-    }else{
-        res.status(404).send('there are no posts yet');
-    }
+// const getAllPosts = async(req, res) => {
+//     const friendId = req.params.id;
+//     posts = await postService.getAllPosts(friendId);
+//     if (posts) {
+//         res.status(200).json(posts);
+//     }else{
+//         res.status(404).send('there are no posts yet');
+//     }
     
+// }
+const getAllPosts = async(req, res) => {
+    const postList = await postService.getAllPosts();
+    if (postList) {
+        res.status(200).json(postList);
+    } else {
+        res.status(404).send("Error getting posts");
+    }
 }
 
 const createPost = async(req, res) => {
     const idUserName = req.params.id;
-    console.log(idUserName);
     const fullname = req.body.fullname;
     const icon = req.body.icon;
     const initialText = req.body.initialText;
@@ -48,7 +55,19 @@ const createPost = async(req, res) => {
     }
 }
 
+const deletePost = async(req, res) => {
+    const idUserName = req.params.id;
+    const postId = req.params.pid;
+    const deletedPost = await postService.deletePost(idUserName, postId);
+    if (deletedPost) {
+      res.status(200).send("post deleted successfully");
+    } else {
+      res.status(404).send("Error deleting post");
+    }
+}
+
 module.exports = {
     getAllPosts,
-    createPost
+    createPost,
+    deletePost
 };
