@@ -27,7 +27,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.json());
 app.use("/api/users", usersRoute); 
 app.use("/api/tokens", tokenRoutes); 
-app.use("/api/users/:id/posts", postsRoute); 
+app.use("/api/posts", postsRoute);
+//app.use("/api/users/:id/posts", postsRoute); 
 
 
 app.listen(8080);
