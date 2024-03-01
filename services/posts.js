@@ -41,9 +41,25 @@ const deletePost = async (idUserName, postId) => {
   return post;
 };
 
+const updatedPost = async(
+  idUserName,
+  postId,
+  initialText,
+  pictures,
+) => {
+   const post = await Post.findById(postId);
+    if (!post) return null;
+    post.idUserName = idUserName;
+    if(initialText)
+      post.initialText = initialText;
+    post.pictures = pictures;
+    return await post.save();  
+}
+
 module.exports = {
-    getAllPosts,
-    createPost,
-    deleteUserPosts,
-    deletePost
+  getAllPosts,
+  createPost,
+  deleteUserPosts,
+  deletePost,
+  updatedPost,
 };
