@@ -18,6 +18,7 @@ router.route('/:id/posts')
   .post(postController.createPost);
 
 router.route("/:id/posts/:pid")
+  .put(postController.updatePost)
   .delete(postController.deletePost);
 
 module.exports = router;
