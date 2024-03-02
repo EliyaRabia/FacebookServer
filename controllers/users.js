@@ -53,31 +53,41 @@ const getUserByUsername = async (req, res) => {
   }
 };
 
+// const getUserById = async (req, res) => {
+//   const id = req.params.id;
+//   const token = req.headers.authorization;
+
+//   try {
+//       // Verify the token
+//       const decoded = jwt.verify(token, "key");
+
+//       // Check if the token's user id matches the requested user id
+//       if (decoded.id !== id) {
+//           res.status(403).send('Unauthorized');
+//           return;
+//       }
+
+//       const user = await userService.getUserById(id);
+//       if (user) {
+//           res.status(200).json(user);
+//       } else {
+//           res.status(404).send('User not found');
+//       }
+//   } catch (error) {
+//       // If the token is invalid or expired, jwt.verify will throw an error
+//       res.status(403).send('Invalid token');
+//   }
+// }
+
 const getUserById = async (req, res) => {
   const id = req.params.id;
-  const token = req.headers.authorization;
-
-  try {
-      // Verify the token
-      const decoded = jwt.verify(token, "key");
-
-      // Check if the token's user id matches the requested user id
-      if (decoded.id !== id) {
-          res.status(403).send('Unauthorized');
-          return;
-      }
-
-      const user = await userService.getUserById(id);
-      if (user) {
-          res.status(200).json(user);
-      } else {
-          res.status(404).send('User not found');
-      }
-  } catch (error) {
-      // If the token is invalid or expired, jwt.verify will throw an error
-      res.status(403).send('Invalid token');
+  user = await userService.getUserById(id);
+  if (user) {
+    res.status(200).json(user);
+  } else {
+    res.status(404).send("User not found");
   }
-}
+};
 const getUserByIdWithPassword = async (req, res) => {
   const id = req.params.id;
   user = await userService.getUserByIdWithPassword(id);
@@ -89,7 +99,6 @@ const getUserByIdWithPassword = async (req, res) => {
 };
 
 const updateUser = async (req, res) => {
-    console.log("hey");
     const id = req.params.id;
     const username = req.body.username;
     const password = req.body.password;
@@ -106,6 +115,9 @@ const updateUser = async (req, res) => {
 const deleteUser = async (req, res) => {
     const id = req.params.id;
     await postSevice.deleteUserPosts(id);
+    await userService.removeUserFromFriendsLists(id);
+    await userService.removeUserFromFriendRequests(id);
+    await userService.removeUserFromFriendRequestsSent(id);
     isDeleted = await userService.deleteUser(id);
     if (isDeleted) {
         res.status(200).send('User deleted successfully');
@@ -127,13 +139,39 @@ const getAllFriends = async (req, res) => {
 const addFriend = async (req, res) => {
   const id = req.params.id;
   const friendId = req.body.friendId;
-  const friend = await userService.addFriend(id, friendId);
-  if (friend) {
-    res.status(200).send("Friend added successfully");
+  const user = await userService.addFriend(id, friendId);
+  if (user) {
+    //res.status(200).json(user);
+    res.status(200).send("Friend requst sent successfully");
   } else {
     res.status(404).send("Error adding friend");
   }
 };
+
+const approveFriendRequest = async (req, res) => {
+  const id = req.params.id;
+  const friendId = req.params.fid;
+  const user = await userService.approveFriendRequest(id, friendId);
+  if (user) {
+    //res.status(200).json(user);
+    res.status(200).send("Friend request approved");
+  } else {
+    res.status(404).send("Error approving friend request");
+  }
+};
+
+const deleteFriendRequest = async (req, res) => {
+  const id = req.params.id;
+  const friendId = req.params.fid;
+  const user = await userService.deleteFriendRequest(id, friendId);
+  if (user) {
+    //res.status(200).json(user);
+    res.status(200).send("Friend request deleted");
+  } else {
+    res.status(404).send("Error deleting friend request");
+  }
+};
+
 
 
 module.exports = {
@@ -147,4 +185,6 @@ module.exports = {
   deleteUser,
   getAllFriends,
   addFriend,
+  approveFriendRequest,
+  deleteFriendRequest
 };

@@ -1,5 +1,7 @@
 const User = require('../models/users');
 const jwt = require('jsonwebtoken');
+const postService = require('../services/posts');
+const ObjectId = require('mongoose').Types.ObjectId;
 
 const createUser = async (username, password, displayName, photo) => {
   const user = new User({
@@ -69,9 +71,11 @@ const updateUser = async (id, username, password, displayName, photo) => {
   }
   if (displayName !== user.displayName) {
     Object.assign(user, { displayName });
+    await postService.updateUserPosts(id, { fullname: displayName });
   }
   if (photo !== user.photo && photo !== "" && photo !== undefined && photo !== null) {
     Object.assign(user, { photo });
+    await postService.updateUserPosts(id, { icon: photo });
   }
   return await user.save();
 };
@@ -104,13 +108,71 @@ const addFriend = async (id, friendId) => {
   const friend = await getUserById(friendId);
   if (!friend) 
     return null;
-  user.friendRequests.push(friend.username);
-  friend.friendRequestsSent.push(user.username);
+  user.friendRequestsSent.push(friend._id);
+  friend.friendRequests.push(user._id);
   await user.save();
   await friend.save();
-  return friend;
+  return user;
 }
 
+const approveFriendRequest = async (id, friendId) => {
+  const user = await getUserById(id);
+  if (!user) 
+    return null;
+  const friend = await getUserById(friendId);
+  if (!friend) 
+    return null;
+  if (user.friendRequests.some(request => request.equals(friend._id))) {
+    user.friendRequests = user.friendRequests.filter((request) => !request.equals(friend._id));
+    user.friendsList.push(friend._id);
+    friend.friendRequestsSent = friend.friendRequestsSent.filter((request) => !request.equals(user._id));
+    friend.friendsList.push(user._id);
+    await user.save();
+    await friend.save();
+    return user;
+  } else {
+    return null;
+  }
+}
+
+const deleteFriendRequest = async (id, friendId) => {
+  const user = await getUserById(id);
+  if (!user) 
+    return null;
+  const friend = await getUserById(friendId);
+  if (!friend) 
+    return null;
+  if(user.friendsList.some(friend => friend.equals(friendId))) {
+    user.friendsList = user.friendsList.filter((friend) => !friend.equals(friendId));
+    friend.friendsList = friend.friendsList.filter((friend) => !friend.equals(id));
+    await user.save();
+    await friend.save();
+    return user;
+  }
+  else if (user.friendRequests.some(request => request.equals(friend._id))){
+    user.friendRequests = user.friendRequests.filter((request) => !request.equals(friend._id));
+    friend.friendRequestsSent = friend.friendRequestsSent.filter((request) => !request.equals(user._id));
+    await user.save();
+    await friend.save();
+    return user;
+  }
+  return null;
+}
+
+const removeUserFromFriendsLists = async (userId) => {
+  const userIdObj = new ObjectId(userId);
+  await User.updateMany({ friendsList: userIdObj }, { $pull: { friendsList: userIdObj } });
+}
+
+const removeUserFromFriendRequests = async (userId) => {
+  const userIdObj = new ObjectId(userId);
+  await User.updateMany({ friendRequests: userIdObj }, { $pull: { friendRequests: userIdObj } });
+}
+
+const removeUserFromFriendRequestsSent = async (userId) => {
+  const userIdObj = new ObjectId(userId);
+  await User.updateMany({ friendRequestsSent: userIdObj }, { $pull: { friendRequestsSent: userIdObj } });
+}
 
 module.exports = {
   createUser,
@@ -122,4 +184,9 @@ module.exports = {
   getUserByIdWithPassword,
   getAllFriends,
   addFriend,
+  approveFriendRequest,
+  deleteFriendRequest,
+  removeUserFromFriendsLists,
+  removeUserFromFriendRequests,
+  removeUserFromFriendRequestsSent,
 };

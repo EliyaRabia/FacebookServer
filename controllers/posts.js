@@ -2,7 +2,7 @@ const postService = require('../services/posts');
 const jwt = require('jsonwebtoken');
 const Post = require('../models/posts');
 const User = require('../models/users');
-
+const userService = require('../services/users');
 // const getAllPosts = async(req, res) => {
 //     const friendId = req.params.id;
 //     posts = await postService.getAllPosts(friendId);
@@ -85,6 +85,41 @@ const updatePost = async(req, res) => {
     }
 }
 
+// const getAllPostsByUserId = async(req, res) => {
+//     const id = req.params.id;
+//     const posts = await postService.getAllPostsByUserId(id);
+//     if (posts) {
+//         res.status(200).json(posts);
+//     } else {
+//         res.status(404).send("Error getting posts");
+//     }
+// }
+
+const getAllPostsByUserId = async (req, res) => {
+  const userId = req.params.id;
+  // Get the JWT from the Authorization header
+  let token = req.headers.authorization;
+  // If the token is prefixed with 'Bearer ', remove the prefix
+  if (token.startsWith('Bearer ')) {
+    token = token.split(' ')[1];
+  }
+  // Decode the JWT to get the current user's ID
+  const decodedToken = jwt.verify(token, 'key'); // Use the same secret key that you used to sign the JWT
+  const currentUserId = decodedToken.id;
+  const user = await userService.getUserById(userId);
+  const currentUser = await userService.getUserById(currentUserId);
+  if (!user || !currentUser) 
+    return res.status(404).send("User not found");
+  // Check if the current user is the same as the user whose posts are being requested or a friend of them
+  if (userId !== currentUserId && !user.friendsList.some(friendId => friendId.equals(currentUserId))) 
+    return res.status(403).send("You must be a friend to view the posts");
+  const posts = await postService.getAllPostsByUserId(userId);
+  if (posts) {
+    res.status(200).json(posts);
+  } else {
+    res.status(404).send("Error getting posts");
+  }
+}
 
 
 module.exports = {
@@ -92,4 +127,5 @@ module.exports = {
   createPost,
   deletePost,
   updatePost,
+  getAllPostsByUserId,
 };

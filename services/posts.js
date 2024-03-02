@@ -47,13 +47,20 @@ const updatedPost = async(
   initialText,
   pictures,
 ) => {
-   const post = await Post.findById(postId);
+    const post = await Post.findById(postId);
     if (!post) return null;
     post.idUserName = idUserName;
     if(initialText)
       post.initialText = initialText;
     post.pictures = pictures;
     return await post.save();  
+}
+const updateUserPosts = async (userId, update) => {
+  await Post.updateMany({ idUserName: userId }, { $set: update });
+}
+
+const getAllPostsByUserId = async (userId) => {
+  return await Post.find({ idUserName: userId }).sort({ time: -1 });
 }
 
 module.exports = {
@@ -62,4 +69,6 @@ module.exports = {
   deleteUserPosts,
   deletePost,
   updatedPost,
+  updateUserPosts,
+  getAllPostsByUserId
 };
