@@ -8,13 +8,13 @@ router.route('/')
 
 router
   .route("/:id")
-  .get(userController.getUserByIdWithPassword)
+  //.get(userController.getUserByIdWithPassword)
   .get(userController.getUserById)
   .put(userController.updateUser)
   .delete(userController.deleteUser);
 
 router.route('/:id/posts')
-  // .get(postController.getAllPosts)
+  .get(postController.getAllPostsByUserId)
   .post(postController.createPost);
 
 router.route("/:id/posts/:pid")
@@ -25,7 +25,11 @@ router.route("/:id/friends")
 .post(userController.addFriend)
 .get(userController.getAllFriends);
 
-router.route("/:username/friendRequests")
+router.route("/:id/friendRequests")
  .get(userController.getUserByUsername);
+
+router.route("/:id/friends/:fid")
+  .put(userController.approveFriendRequest)
+  .delete(userController.deleteFriendRequest);
 
 module.exports = router;

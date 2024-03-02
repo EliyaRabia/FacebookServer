@@ -59,11 +59,16 @@ const updateUserPosts = async (userId, update) => {
   await Post.updateMany({ idUserName: userId }, { $set: update });
 }
 
+const getAllPostsByUserId = async (userId) => {
+  return await Post.find({ idUserName: userId }).sort({ time: -1 });
+}
+
 module.exports = {
   getAllPosts,
   createPost,
   deleteUserPosts,
   deletePost,
   updatedPost,
-  updateUserPosts
+  updateUserPosts,
+  getAllPostsByUserId
 };
