@@ -85,6 +85,8 @@ const updatePost = async(req, res) => {
     }
 }
 
+
+
 module.exports = {
   getAllPosts,
   createPost,
