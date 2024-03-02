@@ -21,8 +21,11 @@ router.route("/:id/posts/:pid")
   .put(postController.updatePost)
   .delete(postController.deletePost);
 
-router.route("/:id/frineds")
+router.route("/:id/friends")
 .post(userController.addFriend)
 .get(userController.getAllFriends);
+
+router.route("/:username/friendRequests")
+ .get(userController.getUserByUsername);
 
 module.exports = router;

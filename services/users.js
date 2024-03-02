@@ -104,8 +104,8 @@ const addFriend = async (id, friendId) => {
   const friend = await getUserById(friendId);
   if (!friend) 
     return null;
-  user.friendRequests.push(friendId);
-  friend.friendRequestsSent.push(id);
+  user.friendRequests.push(friend.username);
+  friend.friendRequestsSent.push(user.username);
   await user.save();
   await friend.save();
   return friend;
