@@ -87,6 +87,41 @@ const deleteUser = async (id) => {
   return true;
 };
 
+const getAllFriends = async (id) => {
+  const user = await getUserById(id);
+  if (!user) 
+    return null;
+  const friends = [];
+  for (let i = 0; i < user.friendsList.length; i++) {
+    const friend = await getUserById(user.friendsList[i]);
+    friends.push(friend);
+  }
+  return friends;
+}
+
+const addFriend = async (id, friendId) => {
+  const user = await getUserById(id);
+  if (!user) 
+    return null;
+  const friend = await getUserById(friendId);
+  if (!friend) 
+    return null;
+  user.friendRequests.push(friend.username);
+  friend.friendRequestsSent.push(user.username);
+  await user.save();
+  await friend.save();
+  return friend;
+}
 
 
-module.exports = { createUser, getUser, getUserByUsername, getUserById,updateUser,deleteUser,getUserByIdWithPassword };
+module.exports = {
+  createUser,
+  getUser,
+  getUserByUsername,
+  getUserById,
+  updateUser,
+  deleteUser,
+  getUserByIdWithPassword,
+  getAllFriends,
+  addFriend,
+};

@@ -7,7 +7,6 @@ const createUser = async (req, res) => {
     const password = req.body.password;
     const displayName = req.body.displayName;
     const photo = req.body.photo;
-    console.log("hey");
     user = await userService.getUserByUsername(username);
     if (!user) {
         res.status(200).json(await userService.createUser(username, password, displayName, photo));
@@ -43,7 +42,7 @@ const getUser = async (req, res) => {
 };
 
 const getUserByUsername = async (req, res) => {
-  const username = req.body.username;
+  const username = req.params.username;
   user = await userService.getUserByUsername(username);
   if (user) {
     res
@@ -79,7 +78,7 @@ const getUserById = async (req, res) => {
       res.status(403).send('Invalid token');
   }
 }
-getUserByIdWithPassword = async (req, res) => {
+const getUserByIdWithPassword = async (req, res) => {
   const id = req.params.id;
   user = await userService.getUserByIdWithPassword(id);
   if (user) {
@@ -115,6 +114,28 @@ const deleteUser = async (req, res) => {
     }
 }
 
+const getAllFriends = async (req, res) => {
+  const id = req.params.id;
+  const friends = await userService.getAllFriends(id);
+  if (friends) {
+    res.status(200).json(friends);
+  } else {
+    res.status(404).send("User not found");
+  }
+}
+
+const addFriend = async (req, res) => {
+  const id = req.params.id;
+  const friendId = req.body.friendId;
+  const friend = await userService.addFriend(id, friendId);
+  if (friend) {
+    res.status(200).send("Friend added successfully");
+  } else {
+    res.status(404).send("Error adding friend");
+  }
+};
+
+
 module.exports = {
   createUser,
   login,
@@ -124,4 +145,6 @@ module.exports = {
   getUserByIdWithPassword,
   updateUser,
   deleteUser,
+  getAllFriends,
+  addFriend,
 };
