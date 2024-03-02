@@ -1,6 +1,6 @@
 const User = require('../models/users');
 const jwt = require('jsonwebtoken');
-
+const postService = require('../services/posts');
 const createUser = async (username, password, displayName, photo) => {
   const user = new User({
     username,
@@ -69,9 +69,11 @@ const updateUser = async (id, username, password, displayName, photo) => {
   }
   if (displayName !== user.displayName) {
     Object.assign(user, { displayName });
+    await postService.updateUserPosts(id, { fullname: displayName });
   }
   if (photo !== user.photo && photo !== "" && photo !== undefined && photo !== null) {
     Object.assign(user, { photo });
+    await postService.updateUserPosts(id, { icon: photo });
   }
   return await user.save();
 };
