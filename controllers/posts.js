@@ -30,7 +30,7 @@ const createPost = async(req, res) => {
     const pictures = req.body.pictures;
     const time = req.body.time;
     const commentsNumber = 0;
-    const likes = 0;
+    const likes = [];
     const comments = [];
     const newPost = new Post({
         idUserName,
@@ -42,6 +42,7 @@ const createPost = async(req, res) => {
         commentsNumber,
         likes,
         comments
+
     });
     const post = await postService.createPost(newPost);
     if (post) {
@@ -121,6 +122,17 @@ const getAllPostsByUserId = async (req, res) => {
   }
 }
 
+const addLikeOrRemoveLike = async(req, res) => {
+    const userId = req.params.id;
+    const postId = req.params.pid;
+    const post = await postService.addLikeOrRemoveLike(userId, postId);
+    if (post) {
+        res.status(200).json(post);
+    } else {
+        res.status(404).send("Error adding or removing like");
+    }
+}
+
 
 module.exports = {
   getAllPosts,
@@ -128,4 +140,5 @@ module.exports = {
   deletePost,
   updatePost,
   getAllPostsByUserId,
+  addLikeOrRemoveLike
 };

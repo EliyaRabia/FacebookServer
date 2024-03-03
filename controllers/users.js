@@ -115,6 +115,7 @@ const updateUser = async (req, res) => {
 const deleteUser = async (req, res) => {
     const id = req.params.id;
     await postSevice.deleteUserPosts(id);
+    await postSevice.deleteUserLikes(id);
     await userService.removeUserFromFriendsLists(id);
     await userService.removeUserFromFriendRequests(id);
     await userService.removeUserFromFriendRequestsSent(id);

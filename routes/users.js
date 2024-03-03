@@ -32,4 +32,6 @@ router.route("/:id/friends/:fid")
   .put(userController.approveFriendRequest)
   .delete(userController.deleteFriendRequest);
 
+router.route("/:id/posts/:pid/likes")
+  .post(postController.addLikeOrRemoveLike);
 module.exports = router;
