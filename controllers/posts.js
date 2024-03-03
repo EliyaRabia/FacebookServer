@@ -3,12 +3,25 @@ const jwt = require('jsonwebtoken');
 const Post = require('../models/posts');
 const User = require('../models/users');
 const userService = require('../services/users');
-const getAllPosts = async(req, res) => {
-    const postList = await postService.getAllPosts();
-    if (postList) {
-        res.status(200).json(postList);
+
+const get25Posts = async(req, res) => {
+   let token = req.headers.authorization;
+   // If the token is prefixed with 'Bearer ', remove the prefix
+   if (token.startsWith("Bearer ")) {
+     token = token.split(" ")[1];
+   }
+   // Decode the JWT to get the current user's ID
+   const decodedToken = jwt.verify(token, "key"); // Use the same secret key that you used to sign the JWT
+   const currentUserId = decodedToken.id;
+   const user = await userService.getUserById(currentUserId);
+    if (!user) {
+      return res.status(404).send("User not found");
+    }
+    const posts = await postService.get25Posts(user);
+    if (posts) {
+      res.status(200).json(posts);
     } else {
-        res.status(404).send("Error getting posts");
+      res.status(404).send("Error getting posts");
     }
 }
 
@@ -76,15 +89,7 @@ const updatePost = async(req, res) => {
     }
 }
 
-// const getAllPostsByUserId = async(req, res) => {
-//     const id = req.params.id;
-//     const posts = await postService.getAllPostsByUserId(id);
-//     if (posts) {
-//         res.status(200).json(posts);
-//     } else {
-//         res.status(404).send("Error getting posts");
-//     }
-// }
+
 
 const getAllPostsByUserId = async (req, res) => {
   const userId = req.params.id;
@@ -125,10 +130,10 @@ const addLikeOrRemoveLike = async(req, res) => {
 
 
 module.exports = {
-  getAllPosts,
+  get25Posts,
   createPost,
   deletePost,
   updatePost,
   getAllPostsByUserId,
-  addLikeOrRemoveLike
+  addLikeOrRemoveLike,
 };
