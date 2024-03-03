@@ -4,16 +4,38 @@ const jwt = require('jsonwebtoken');
 const mongoose = require('mongoose');
 const ObjectId = mongoose.Types.ObjectId;
 
-// const getAllPosts = async (friendId) =>{
-//     try {
-//         return await Post.findById({ friendId}).exec();
-//       } catch (error) {
-//         res.status(404).send(error);
-//       }
-// };
-const getAllPosts = async () => {
-    return await Post.find({});
-}
+
+const get25Posts = async (user) => {
+  // Convert the ObjectIds in the friendsList to strings
+  const friendIds = user.friendsList.map((id) => id.toString());
+
+  // Get the 20 most recent posts from the user's friends and the user
+  const friendsPosts = await Post.find({
+    idUserName: { $in: [...friendIds, user._id.toString()] },
+  })
+    .sort({ time: -1 })
+    .limit(20)
+    .exec();
+
+  // Get the IDs of the posts already fetched
+  const fetchedPostIds = friendsPosts.map((post) => post._id.toString());
+
+  // Get the 5 most recent posts from users who are not the user's friends and not the user, and which have not already been fetched
+  const nonFriendsPosts = await Post.find({
+    idUserName: { $nin: [...friendIds, user._id.toString()] },
+    _id: { $nin: fetchedPostIds },
+  })
+    .sort({ time: -1 })
+    .limit(5)
+    .exec();
+
+  // Combine and sort the posts
+  const posts = [...friendsPosts, ...nonFriendsPosts].sort(
+    (a, b) => b.time - a.time
+  );
+
+  return posts;
+};
 
 const createPost = async (newPost) => {
     return await newPost.save();
@@ -100,7 +122,7 @@ const deleteUserLikes = async (userId) => {
 }
 
 module.exports = {
-  getAllPosts,
+  get25Posts,
   createPost,
   deleteUserPosts,
   deletePost,
@@ -108,5 +130,5 @@ module.exports = {
   updateUserPosts,
   getAllPostsByUserId,
   addLikeOrRemoveLike,
-  deleteUserLikes
+  deleteUserLikes,
 };
