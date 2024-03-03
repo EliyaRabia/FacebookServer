@@ -33,6 +33,10 @@ const UserSchema = new Schema({
     friendRequestsSent : {
         type: Array,
         required: true
-    }
+    },
+    likes: {
+        type: Array,
+        required: true
+    },
 });
 module.exports = mongoose.model('users', UserSchema);

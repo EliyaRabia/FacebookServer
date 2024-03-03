@@ -12,7 +12,8 @@ const createUser = async (username, password, displayName, photo) => {
     postList: [],
     friendsList: [],
     friendRequests: [],
-    friendRequestsSent: []
+    friendRequestsSent: [],
+    likes: [],
   });
   try {
     return await user.save();
@@ -173,6 +174,7 @@ const removeUserFromFriendRequestsSent = async (userId) => {
   const userIdObj = new ObjectId(userId);
   await User.updateMany({ friendRequestsSent: userIdObj }, { $pull: { friendRequestsSent: userIdObj } });
 }
+
 
 module.exports = {
   createUser,
