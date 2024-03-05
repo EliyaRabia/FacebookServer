@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const userController = require('../controllers/users')
 const postController = require('../controllers/posts')
+const commentsController = require('../controllers/comments')
 //Register
 router.route('/')
 .post(userController.createUser);
@@ -34,4 +35,13 @@ router.route("/:id/friends/:fid")
 
 router.route("/:id/posts/:pid/likes")
   .post(postController.addLikeOrRemoveLike);
+
+router.route("/:id/posts/:pid/comments")
+  .post(commentsController.addComment);
+
+router.route("/:id/posts/:pid/comments/:cid")
+  .put(commentsController.updateComment)
+  .delete(commentsController.deleteComment);
+  
+
 module.exports = router;

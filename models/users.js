@@ -38,5 +38,9 @@ const UserSchema = new Schema({
         type: Array,
         required: true
     },
+    comments: {
+        type: Array,
+        required: true
+    },
 });
 module.exports = mongoose.model('users', UserSchema);

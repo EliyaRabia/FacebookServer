@@ -1,6 +1,11 @@
 const userService = require('../services/users');
 const jwt = require('jsonwebtoken');
 const postSevice = require('../services/posts');
+const commentsService = require('../services/comments');
+const User = require('../models/users');
+const Post = require('../models/posts'); 
+const Comment = require('../models/comments');
+
 
 const createUser = async (req, res) => {
     const username = req.body.username;
@@ -113,19 +118,53 @@ const updateUser = async (req, res) => {
 }
 
 const deleteUser = async (req, res) => {
-    const id = req.params.id;
-    await postSevice.deleteUserPosts(id);
-    await postSevice.deleteUserLikes(id);
-    await userService.removeUserFromFriendsLists(id);
-    await userService.removeUserFromFriendRequests(id);
-    await userService.removeUserFromFriendRequestsSent(id);
-    isDeleted = await userService.deleteUser(id);
-    if (isDeleted) {
-        res.status(200).send('User deleted successfully');
-    }else{
-        res.status(404).send('User not found');
+  const id = req.params.id;
+
+  // Find the user's posts
+  const userPosts = await Post.find({ idUserName: id });
+
+  // Delete all comments associated with the user's posts and update the comments array of all users
+  for (let post of userPosts) {
+    const deletedComments = await commentsService.deletePostComments(post._id);
+    for (let comment of deletedComments) {
+      await User.updateMany(
+        { comments: comment._id },
+        { $pull: { comments: comment._id } }
+      );
     }
+    // Delete the post after all associated comments have been deleted
+    await post.deleteOne();
+  }
+
+  // Delete the user's comments on other users' posts and update the comments array of all users
+  const userComments = await Comment.find({ idUserName: id });
+  for (let comment of userComments) {
+    await User.updateMany(
+      { comments: comment._id },
+      { $pull: { comments: comment._id } }
+    );
+    // Find the post associated with the comment and remove the comment ID from its comments array
+    await Post.updateMany(
+      { comments: comment._id },
+      { $pull: { comments: comment._id } }
+    );
+    await comment.deleteOne();
+  }
+
+  // Continue with the rest of the deletion process
+  await postSevice.deleteUserLikes(id);
+  await userService.removeUserFromFriendsLists(id);
+  await userService.removeUserFromFriendRequests(id);
+  await userService.removeUserFromFriendRequestsSent(id);
+  const isDeleted = await userService.deleteUser(id);
+
+  if (isDeleted) {
+    res.status(200).send('User deleted successfully');
+  } else {
+    res.status(404).send('User not found');
+  }
 }
+
 
 const getAllFriends = async (req, res) => {
   const id = req.params.id;

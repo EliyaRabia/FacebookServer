@@ -1,6 +1,7 @@
 const Post = require('../models/posts');
 const User = require('../models/users');
 const jwt = require('jsonwebtoken'); 
+const commentService = require('../services/comments');
 const mongoose = require('mongoose');
 const ObjectId = mongoose.Types.ObjectId;
 
@@ -42,18 +43,17 @@ const createPost = async (newPost) => {
 }
 
 const deleteUserPosts = async (userId) => {
-    return await Post.deleteMany({ idUserName: userId });
+  const posts = await Post.find({ idUserName: userId });
+  await Post.deleteMany({ idUserName: userId });
+  return posts;
 }
-
 const deletePost = async (idUserName, postId) => {
-  const postIdObj = new ObjectId(String(postId));
+  const postIdObj = new mongoose.Types.ObjectId(postId);
   const post = await Post.findById(postIdObj);
   if (!post) return null;
 
   // Remove the post from the likes of users who liked it
   await User.updateMany({ likes: postIdObj }, { $pull: { likes: postIdObj } });
-
-  await post.deleteOne();
 
   // Find the user and update their postList
   const user = await User.findById(idUserName);
@@ -62,10 +62,24 @@ const deletePost = async (idUserName, postId) => {
     if (postIndex > -1) {
       // Remove the post from the postList
       user.postList.splice(postIndex, 1);
-      // Save the updated user
-      await user.save();
     }
   }
+
+  // Delete the comments of the post and remove their IDs from the comments array of all users
+  const deletedComments = await commentService.deletePostComments(postId);
+  for (let comment of deletedComments) {
+    await User.updateMany(
+      { comments: comment._id },
+      { $pull: { comments: comment._id } }
+    );
+  }
+
+  // Save the updated user
+  await user.save();
+
+  // Delete the post
+  await post.deleteOne();
+
   return post;
 }
 
