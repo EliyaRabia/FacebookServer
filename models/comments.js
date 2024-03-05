@@ -14,6 +14,10 @@ const CommentSchema = new Schema({
         type: Object,
         required: true
     },
+    idPost: {
+        type: String,
+        required: true
+    },
     text:{
         type:String,
         required: true

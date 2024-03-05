@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken');
 const Post = require('../models/posts');
 const User = require('../models/users');
 const userService = require('../services/users');
+const commentService = require('../services/comments');
 
 const get25Posts = async(req, res) => {
    let token = req.headers.authorization;

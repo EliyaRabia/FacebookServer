@@ -1,6 +1,7 @@
 const User = require('../models/users');
 const jwt = require('jsonwebtoken');
 const postService = require('../services/posts');
+const commentService = require('../services/comments');
 const ObjectId = require('mongoose').Types.ObjectId;
 
 const createUser = async (username, password, displayName, photo) => {
@@ -14,6 +15,7 @@ const createUser = async (username, password, displayName, photo) => {
     friendRequests: [],
     friendRequestsSent: [],
     likes: [],
+    comments: [],
   });
   try {
     return await user.save();
@@ -73,10 +75,13 @@ const updateUser = async (id, username, password, displayName, photo) => {
   if (displayName !== user.displayName) {
     Object.assign(user, { displayName });
     await postService.updateUserPosts(id, { fullname: displayName });
+    await commentService.updateUserComments(id, { fullname: displayName });
+    
   }
   if (photo !== user.photo && photo !== "" && photo !== undefined && photo !== null) {
     Object.assign(user, { photo });
     await postService.updateUserPosts(id, { icon: photo });
+    await commentService.updateUserComments(id, { icon: photo });
   }
   return await user.save();
 };
