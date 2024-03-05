@@ -137,6 +137,11 @@ const deleteUser = async (req, res) => {
         { $pull: { comments: comment._id } }
       );
     }
+    // Remove the post ID from the likes array of all users who liked this post
+    await User.updateMany(
+      { likes: post._id },
+      { $pull: { likes: post._id } }
+    );
     // Delete the post after all associated comments have been deleted
     await post.deleteOne();
   }
