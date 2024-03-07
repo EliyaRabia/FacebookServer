@@ -59,6 +59,15 @@ const getUserByIdWithPassword = async (id) => {
   }
 }
 
+const getUserForProfile = async (id) => {
+  try {
+    return await User.findById(id).select('displayName photo friendsList').exec();
+  } catch (error) {
+    res.status(404).send
+    return null;
+  }
+}
+
 const updateUser = async (id, username, password, displayName, photo) => {
   const user = await getUserByIdWithPassword(id);
   if (!user) 
@@ -196,4 +205,5 @@ module.exports = {
   removeUserFromFriendsLists,
   removeUserFromFriendRequests,
   removeUserFromFriendRequestsSent,
+  getUserForProfile
 };

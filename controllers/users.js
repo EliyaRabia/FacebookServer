@@ -60,23 +60,30 @@ const getUserByUsername = async (req, res) => {
 
 // const getUserById = async (req, res) => {
 //   const id = req.params.id;
-//   const token = req.headers.authorization;
-
+//   let token = req.headers.authorization;
+//    // If the token is prefixed with 'Bearer ', remove the prefix
+//    if (token.startsWith("Bearer ")) {
+//      token = token.split(" ")[1];
+//    }
 //   try {
 //       // Verify the token
 //       const decoded = jwt.verify(token, "key");
-
 //       // Check if the token's user id matches the requested user id
 //       if (decoded.id !== id) {
-//           res.status(403).send('Unauthorized');
-//           return;
+//           const userProfile = await userService.getUserForProfile(id);
+//           if (userProfile) {
+//               res.status(200).json(userProfile);
+//           } else {
+//               res.status(404).send('User not found');
+//           }
 //       }
-
-//       const user = await userService.getUserById(id);
-//       if (user) {
+//       else {
+//         const user = await userService.getUserById(id);
+//         if (user) {
 //           res.status(200).json(user);
-//       } else {
+//         } else {
 //           res.status(404).send('User not found');
+//       }
 //       }
 //   } catch (error) {
 //       // If the token is invalid or expired, jwt.verify will throw an error
@@ -93,6 +100,7 @@ const getUserById = async (req, res) => {
     res.status(404).send("User not found");
   }
 };
+
 const getUserByIdWithPassword = async (req, res) => {
   const id = req.params.id;
   user = await userService.getUserByIdWithPassword(id);
