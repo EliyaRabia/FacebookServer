@@ -32,7 +32,7 @@ const createPost = async(req, res) => {
     const icon = req.body.icon;
     const initialText = req.body.initialText;
     const pictures = req.body.pictures;
-    const time = req.body.time;
+    const time = new Date();
     const commentsNumber = 0;
     const likes = [];
     const comments = [];
