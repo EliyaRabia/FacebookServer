@@ -33,7 +33,6 @@ const createPost = async(req, res) => {
     const initialText = req.body.initialText;
     const pictures = req.body.pictures;
     const time = new Date();
-    const commentsNumber = 0;
     const likes = [];
     const comments = [];
     const newPost = new Post({
@@ -43,7 +42,6 @@ const createPost = async(req, res) => {
         initialText,
         pictures,
         time,
-        commentsNumber,
         likes,
         comments
 

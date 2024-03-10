@@ -28,19 +28,6 @@ const PostSchema = new Schema({
         required:true,
         default: Date.now
     }, 
-
-    commentsNumber:{
-        type: Number,
-        required:true,
-        default: 0
-    },
-
-    likes: {
-        type: Number,
-        required:true,
-        default: 0
-    },
-    
     comments: {
         type: Array,
         required: true
