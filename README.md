@@ -1,10 +1,50 @@
 # FacebookServer
 
-Our React Facebook Repository: 
+## Introduction
+
+Welcome to Our Facebook server repo, this server is made for our React and Android Facebook apps that we developed during the course
+Advanced Programming in BIU. this is a Node Js server so in order to run and use it you need some development environment that supports it. we recommend to you using VS-CODE for this server. in order to make this server work you will also need the software MongoDBCompass that you can install from the web. After this server is running you can use it in React/Android app by reading and cloning their repositories:
+
+This Our React Facebook Repository: 
 
 https://github.com/orshmuel9/facebook 
 
+This Our Android Facebook App Repository: 
 
-Our Android Facebook App Repository: 
+https://github.com/EliyaRabia/AndroidFacebook 
 
-https://github.com/EliyaRabia/AndroidFacebook
+## How to Run It? 
+
+In order to run this server you first need to clone this repo into your computer with the command:
+
+git clone https://github.com/orshmuel9/FacebookServer 
+
+Now you will also need to set up MongoDBCompass to work with this server, 
+Open MongoDBCompass and start by clicking connect when you have this url in the box: 
+
+![connectMongo](picsForREADME/1.png)
+
+After that, add a database named "DB" and add for it 3 collections: "users", "posts", "comments". It should look like this: 
+
+![addDB](picsForREADME/2.png)
+
+after you have done that go into the cloned folder and run in terminal the command: 
+
+Node.js app.js 
+
+right now your server is running and you can use it for React and Android apps 
+make sure you don't close the terminal of the running node js, because it will close the server...
+
+## And thats it! please enjoy using our apps!
+Written by:
+
+Or Shmuel 
+
+Eliya Rabia 
+
+Ofek Yemini
+
+
+
+
+
