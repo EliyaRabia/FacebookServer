@@ -7,11 +7,11 @@ Advanced Programming in BIU. this is a Node Js server so in order to run and use
 
 This Our React Facebook Repository: 
 
-https://github.com/orshmuel9/facebook 
+https://github.com/orshmuel9/facebook/tree/Part3ConnectServer
 
 This Our Android Facebook App Repository: 
 
-https://github.com/EliyaRabia/AndroidFacebook 
+https://github.com/EliyaRabia/AndroidFacebook/tree/Part3ConnectServer 
 
 ## How to Run It? 
 
