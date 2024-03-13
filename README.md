@@ -7,11 +7,11 @@ Advanced Programming in BIU. this is a Node Js server so in order to run and use
 
 This Our React Facebook Repository: 
 
-https://github.com/orshmuel9/facebook 
+https://github.com/orshmuel9/facebook/tree/Part3ConnectServer
 
 This Our Android Facebook App Repository: 
 
-https://github.com/EliyaRabia/AndroidFacebook 
+https://github.com/EliyaRabia/AndroidFacebook/tree/Part3ConnectServer 
 
 ## How to Run It? 
 
@@ -30,7 +30,7 @@ After that, add a database named "DB" and add for it 3 collections: "users", "po
 
 after you have done that go into the cloned folder and run in terminal the command: 
 
-Node.js app.js 
+node app.js 
 
 right now your server is running and you can use it for React and Android apps 
 make sure you don't close the terminal of the running node js, because it will close the server...
