@@ -9,11 +9,13 @@ This Our React Facebook Repository:
 
 https://github.com/orshmuel9/facebook/tree/Part3ConnectServer
 
+(U can also use out react app without clone react repository, u can only run the server and then enter to the web using the port of the server http://localhost:8080/ u can also change the port to whatever do you want in config -> .env.local)
+
 This Our Android Facebook App Repository: 
 
 https://github.com/EliyaRabia/AndroidFacebook/tree/Part3ConnectServer 
 
-## How to Run It? 
+## How to Run The Server? 
 
 In order to run this server you first need to clone this repo into your computer with the command:
 
