@@ -35,6 +35,11 @@ const createPost = async(req, res) => {
     const time = new Date();
     const likes = [];
     const comments = [];
+    const token = req.headers.authorization;
+    const decodedToken = tokendecode(token);
+    if (idUserName !== decodedToken.id) {
+      return res.status(403).send("You can only create a post for yourself");
+    }
     const newPost = new Post({
         idUserName,
         fullname,
@@ -61,6 +66,11 @@ const createPost = async(req, res) => {
 const deletePost = async(req, res) => {
     const idUserName = req.params.id;
     const postId = req.params.pid;
+    const token = req.headers.authorization;
+    const decodedToken = tokendecode(token);
+    if (idUserName !== decodedToken.id) {
+      return res.status(403).send("You can only delete your own posts");
+    }
     const deletedPost = await postService.deletePost(idUserName, postId);
     if (deletedPost) {
       res.status(200).send("post deleted successfully");
@@ -75,6 +85,11 @@ const updatePost = async(req, res) => {
     const postId = req.params.pid;
     const initialText = req.body.initialText;
     const pictures = req.body.pictures;
+    const token = req.headers.authorization;
+    const decodedToken = tokendecode(token);
+    if (idUserName !== decodedToken.id) {
+      return res.status(403).send("You can only update your own posts");
+    }
     const updatedPost = await postService.updatedPost(
       idUserName,
       postId,
@@ -119,6 +134,11 @@ const getAllPostsByUserId = async (req, res) => {
 const addLikeOrRemoveLike = async(req, res) => {
     const userId = req.params.id;
     const postId = req.params.pid;
+    const token = req.headers.authorization;
+    const decodedToken = tokendecode(token);
+    if (userId !== decodedToken.id) {
+      return res.status(403).send("You can only like or unlike posts for yourself");
+    }
     const post = await postService.addLikeOrRemoveLike(userId, postId);
     if (post) {
         res.status(200).json(post);
@@ -126,6 +146,14 @@ const addLikeOrRemoveLike = async(req, res) => {
         res.status(404).send("Error adding or removing like");
     }
 }
+
+function tokendecode(token){
+  if (token.startsWith("Bearer ")) {
+    token = token.split(" ")[1];
+  }
+  return jwt.verify(token, "key");
+}
+
 
 
 module.exports = {

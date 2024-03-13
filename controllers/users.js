@@ -117,6 +117,12 @@ const updateUser = async (req, res) => {
     const password = req.body.password;
     const displayName = req.body.displayName;
     const photo = req.body.photo;
+    const token = req.headers.authorization;
+    const decoded = tokendecode(token);
+    if (decoded.id !== id) {
+      res.status(403).send("Invalid token");
+      return;
+    }
     user = await userService.updateUser(id,username, password, displayName, photo);
     if (user !== null) {
         res.status(200).send('User updated successfully');
@@ -127,7 +133,12 @@ const updateUser = async (req, res) => {
 
 const deleteUser = async (req, res) => {
   const id = req.params.id;
-
+  const token = req.headers.authorization;
+  const decoded = tokendecode(token);
+  if (decoded.id !== id) {
+    res.status(403).send("Invalid token");
+    return;
+  }
   // Find the user's posts
   const userPosts = await Post.find({ idUserName: id });
 
@@ -192,6 +203,12 @@ const getAllFriends = async (req, res) => {
 const addFriend = async (req, res) => {
   const id = req.params.id;
   const friendId = req.body.friendId;
+  const token = req.headers.authorization;
+  const decoded = tokendecode(token);
+  if (decoded.id !== id) {
+    res.status(403).send("Invalid token");
+    return;
+  }
   const user = await userService.addFriend(id, friendId);
   if (user) {
     //res.status(200).json(user);
@@ -204,6 +221,12 @@ const addFriend = async (req, res) => {
 const approveFriendRequest = async (req, res) => {
   const id = req.params.id;
   const friendId = req.params.fid;
+  const token = req.headers.authorization;
+  const decoded = tokendecode(token);
+  if (decoded.id !== id) {
+    res.status(403).send("Invalid token");
+    return;
+  }
   const user = await userService.approveFriendRequest(id, friendId);
   if (user) {
     //res.status(200).json(user);
@@ -216,6 +239,12 @@ const approveFriendRequest = async (req, res) => {
 const deleteFriendRequest = async (req, res) => {
   const id = req.params.id;
   const friendId = req.params.fid;
+  const token = req.headers.authorization;
+  const decoded = tokendecode(token);
+  if (decoded.id !== id) {
+    res.status(403).send("Invalid token");
+    return;
+  }
   const user = await userService.deleteFriendRequest(id, friendId);
   if (user) {
     //res.status(200).json(user);
@@ -225,6 +254,12 @@ const deleteFriendRequest = async (req, res) => {
   }
 };
 
+function tokendecode(token){
+  if (token.startsWith("Bearer ")) {
+    token = token.split(" ")[1];
+  }
+  return jwt.verify(token, "key");
+}
 
 
 module.exports = {
@@ -239,5 +274,5 @@ module.exports = {
   getAllFriends,
   addFriend,
   approveFriendRequest,
-  deleteFriendRequest
+  deleteFriendRequest,
 };
