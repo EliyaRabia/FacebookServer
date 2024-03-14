@@ -50,9 +50,6 @@ const updateComment = async(req, res) => {
     const idUserName = req.params.id;
     const token = req.headers.authorization;
     const decodedToken = tokendecode(token);
-    if (idUserName !== decodedToken.id) {
-        return res.status(403).send("You can only update your own comments");
-    }
     const commentId = req.params.cid;
     const text = req.body.text;
     const comment = await commentService.updateComment(commentId, text);
@@ -67,9 +64,6 @@ const deleteComment = async(req, res) => {
     const idUserName = req.params.id;
     const token = req.headers.authorization;
     const decodedToken = tokendecode(token);
-    if (idUserName !== decodedToken.id) {
-        return res.status(403).send("You can only delete your own comments");
-    }
     const commentId = req.params.cid;
     const comment = await commentService.deleteComment(commentId);
     if (comment) {
