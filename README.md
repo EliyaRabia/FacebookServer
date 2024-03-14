@@ -15,7 +15,7 @@ This Our Android Facebook App Repository:
 
 https://github.com/EliyaRabia/AndroidFacebook/tree/Part3ConnectServer 
 
-## Here's a video that shows what our apps can do
+## Here are 2 videos that show what our apps can do
 
 React: https://www.youtube.com/watch?v=7xheojkxw5M 
 
@@ -36,7 +36,11 @@ After that, add a database named "DB" and add for it 3 collections: "users", "po
 
 ![addDB](picsForREADME/2.png)
 
-after you have done that go into the cloned folder and run in terminal the command: 
+After you have done that, go into the cloned folder and run in terminal the command: 
+
+npm install 
+
+And after it finished, you can run the server with the command:
 
 node app.js 
 
