@@ -15,6 +15,12 @@ This Our Android Facebook App Repository:
 
 https://github.com/EliyaRabia/AndroidFacebook/tree/Part3ConnectServer 
 
+## Here's a video that shows what our apps can do
+
+React: https://www.youtube.com/watch?v=7xheojkxw5M 
+
+Android: https://www.youtube.com/watch?v=onclwdYc8EU
+
 ## How to Run The Server? 
 
 In order to run this server you first need to clone this repo into your computer with the command:
