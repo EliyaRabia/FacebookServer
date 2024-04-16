@@ -26,6 +26,8 @@ const net = require('net');
 // Create a new TCP client
 const client1 = new net.Socket();
 const client2 = new net.Socket();
+const client3 = new net.Socket(); 
+
 //client.setNoDelay(true);
 // Connect to the TCP server
 // client.connect(5555, '192.168.209.128', () => {
@@ -49,7 +51,7 @@ const client2 = new net.Socket();
 //}
 
 
-client1.connect(5555, '192.168.209.128', () => {
+client1.connect(5555, '192.168.232.129', () => {
   console.log('Connected to TCP server with client1');
   client1.write(`${init}\n`);
 
@@ -57,22 +59,27 @@ client1.connect(5555, '192.168.209.128', () => {
   client1.destroy();
 });
 
-client2.connect(5555, '192.168.209.128', () => {
+client2.connect(5555, '192.168.232.129', () => {
   console.log('Connected to TCP server with client2');
   urls.forEach((url) => {
       console.log(`Sending URL to server: ${url}`);
       client2.write(`1 ${url}\n`);
   });
-  client2.write("2 ofek\n");
+  // client2.write("2 ofek\n");
+  // client2.write("2 tzvi\n");
+
 });
+
+
+
 
 // Handle data from the server
 client2.on('data', (data) => {
     console.log('Received from server: ' + data);
-    client.destroy();
+    client2.destroy();
 });
 
-// Handle close event
+// // Handle close event
 client2.on('close', () => {
     console.log('Connection closed');
 });
@@ -80,6 +87,18 @@ client2.on('close', () => {
 // Handle error event
 client2.on('error', (err) => {
     console.error('Error: ', err);
+});
+
+client3.connect(5555, '192.168.232.129', () => {
+  console.log('Connected to TCP server with client3');
+  client3.write("2 ofek\n");
+  client3.write("2 tzvi\n");
+  client3.write("2 shimon\n");
+  client3.write("2 www.hey.com\n"); 
+  client3.write("2 david\n");
+
+  client3.destroy();
+
 });
 
 //require("custom-env").env(process.env.NODE_ENV, "./config");
