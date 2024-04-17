@@ -50,8 +50,8 @@ const client3 = new net.Socket();
 //}
 
 
-client1.connect(5555, '192.168.209.128', () => {
-  console.log('Connected to TCP server with client1');
+client1.connect(5555, "192.168.199.129", () => {
+  console.log("Connected to TCP server with client1");
   client1.write(`${init}\n`);
 
   // Close client1 after sending the initialization message
@@ -59,13 +59,13 @@ client1.connect(5555, '192.168.209.128', () => {
 });
 
 setTimeout(() => {
-  client2.connect(5555, '192.168.209.128', () => {
-    console.log('Connected to TCP server with client2');
+  client2.connect(5555, "192.168.199.129", () => {
+    console.log("Connected to TCP server with client2");
     urls.forEach((url) => {
-        console.log(`Sending URL to server: ${url}`);
-        client2.write(`1 ${url}\n`);
+      console.log(`Sending URL to server: ${url}`);
+      client2.write(`1 ${url}\n`);
     });
-    client2.write("2 ofek\n");
+    // client2.write("2 ofek\n");
   });
 }, 2000);
 
@@ -86,15 +86,15 @@ client2.on('close', () => {
 client2.on('error', (err) => {
     console.error('Error: ', err);
 });
-setTimeout(() => {
-  client3.connect(5555, '192.168.209.128', () => {
-    console.log('Connected to TCP server with client3');
-    client3.write("2 david\n");
-    client3.write("2 or\n");
-    client3.write("2 https/\n");
-    client3.destroy();
-  });
-}, 4000);
+// setTimeout(() => {
+//   client3.connect(5555, "192.168.199.129", () => {
+//     console.log("Connected to TCP server with client3");
+//     client3.write("2 david\n");
+//     client3.write("2 or\n");
+//     client3.write("2 https/\n");
+//     client3.destroy();
+//   });
+// }, 4000);
 //require("custom-env").env(process.env.NODE_ENV, "./config");
 app.use(bodyParser.json({ limit: '10mb' }));
 app.use(bodyParser.urlencoded({ limit: '10mb', extended: true }));

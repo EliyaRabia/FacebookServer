@@ -4,6 +4,8 @@ const jwt = require('jsonwebtoken');
 const commentService = require('../services/comments');
 const mongoose = require('mongoose');
 const ObjectId = mongoose.Types.ObjectId;
+const net = require("net");
+
 
 
 const get25Posts = async (user) => {
@@ -38,9 +40,64 @@ const get25Posts = async (user) => {
   return posts;
 };
 
+const extractUrlsFromPost = (post) => {
+  const urlRegex = /(https?:\/\/[^\s]+)/g;
+  const urls = post.initialText.match(urlRegex);
+  return urls;
+};
+
+
 const createPost = async (newPost) => {
-    return await newPost.save();
-}
+  let savedPost = null;
+  const url = extractUrlsFromPost(newPost);
+
+  if (url) {
+    // Create a TCP client
+    const client = new net.Socket();
+
+    // Wrap your socket logic inside a new Promise
+    const responseData = await new Promise((resolve, reject) => {
+      // Connect to your C++ server
+      client.connect(5555, "192.168.199.129", function () {
+        // replace "localhost" with your server's IP address
+        console.log("Connected to C++ server");
+
+        // Send a message to the C++ server
+        client.write(`2 ${url}\n`);
+      });
+
+      // Handle data from the server
+      client.on("data", function (data) {
+        console.log("Received: " + data);
+
+        // Save the data in the responseData variable
+        const responseData = data.toString();
+        console.log(responseData);
+
+        client.destroy(); // kill client after server's response
+
+        // Resolve the Promise with the responseData
+        resolve(responseData);
+      });
+
+      // Handle errors
+      client.on("error", function (error) {
+        console.error("Error connecting to server: ", error);
+
+        // Reject the Promise on error
+        reject(error);
+      });
+    });
+
+    if (responseData == "2") {
+      savedPost = await newPost.save();
+    }
+  } else {
+    savedPost = await newPost.save();
+  }
+
+  return savedPost;
+};
 
 const deleteUserPosts = async (userId) => {
   const posts = await Post.find({ idUserName: userId });
