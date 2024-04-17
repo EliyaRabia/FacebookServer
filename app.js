@@ -92,6 +92,7 @@ setTimeout(() => {
     client3.write("2 david\n");
     client3.write("2 or\n");
     client3.write("2 https/\n");
+    client3.destroy();
   });
 }, 4000);
 //require("custom-env").env(process.env.NODE_ENV, "./config");
