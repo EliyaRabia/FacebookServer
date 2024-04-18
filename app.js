@@ -16,6 +16,7 @@ const urls = process.env.CONNECTION_URL.split(',');
 console.log(urls);
 const init = process.env.INITIALIZATION;
 const net = require('net');
+const yourIp = "192.168.232.129"
 
 // Create a new TCP client
 const client1 = new net.Socket();
@@ -23,7 +24,7 @@ const client2 = new net.Socket();
 const client3 = new net.Socket();
 
 
-client1.connect(5555, "192.168.199.129", () => {
+client1.connect(5555, yourIp, () => {
   console.log("Connected to TCP server with client1");
   client1.write(`${init}\n`);
 
@@ -39,7 +40,7 @@ setTimeout(async () => {
     // Wrap your socket logic inside a new Promise
     const responseData = await new Promise((resolve, reject) => {
       // Connect to your C++ server
-      client2.connect(5555, "192.168.199.129", function () {
+      client2.connect(5555, yourIp, function () {
         console.log("Connected to TCP server with client2");
 
         // Send a message to the C++ server

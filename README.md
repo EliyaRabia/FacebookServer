@@ -15,6 +15,38 @@ This Our Android Facebook App Repository:
 
 https://github.com/EliyaRabia/AndroidFacebook/tree/Part3ConnectServer 
 
+in the part4 of the project we were requested to connect our server into a tcp server that runs a bloom filter of valid urls.
+so, in order to make sure everything works well together you must also run the tcp server,
+here is a link to its instructions that you must follow first: 
+
+https://github.com/ofekyem87biu/ex1/tree/part4  
+
+if you want to make it work on your computer you need to put the ip of your computer that the tcp server is running on,
+(if you use a vmware virtual machine, you need to take its ip).
+
+you need to change the adress to your adress in those files: 
+
+1. on FacebookServer/app.js you need to change here:
+
+![alt text](picsForREADME/app.png)
+
+2. on FacebookServer/controllers/posts.js you need to change here: 
+
+![alt text](picsForREADME/controller.png) 
+
+3. on FacebookServer/services/posts.js you need to change here: 
+
+![alt text](picsForREADME/service.png) 
+
+after you have done that make sure your tcp server is already running and continue. 
+
+## some remarks for part4 
+
+In the env file that is in this repo you have some urls that will be inserted into the bloom filter (in CONNECTION_URL), and you also have its size and number of hash functions that are working on the insertion(in INITIALIZATION). 
+
+If you want to add some urls change the env file in CONNECTION_URL, each url must end with \n (look at those 6 examples that you already have there. also notice that each url is seperated by ',' ). 
+
+
 ## Here are 2 videos that show what our apps can do
 
 React: https://www.youtube.com/watch?v=7xheojkxw5M 

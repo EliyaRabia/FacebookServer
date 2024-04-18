@@ -5,6 +5,7 @@ const User = require('../models/users');
 const userService = require('../services/users');
 const commentService = require('../services/comments');
 const net = require("net");
+const yourIp = "192.168.232.129"
 
 
 const get25Posts = async(req, res) => {
@@ -114,7 +115,7 @@ const updatePost = async (req, res) => {
       // Wrap your socket logic inside a new Promise
       const responseData = await new Promise((resolve, reject) => {
         // Connect to your C++ server
-        client.connect(5555, "192.168.199.129", function () {
+        client.connect(5555, yourIp, function () {
           // replace "localhost" with your server's IP address
           console.log("Connected to C++ server");
 
