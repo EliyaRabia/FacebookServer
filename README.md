@@ -26,21 +26,16 @@ if you want to read more about the bloom filter tcp server or the webstie or the
 if you want to make the tcp server work on your computer you need to put the ip of your computer that the tcp server is running on,
 (if you use a vmware virtual machine, you need to take its ip).
 
-you need to change the adress to your adress in those files: 
+you need to change the address to your address in the ENV.local: 
 
-1. on FacebookServer/app.js you need to change here:
-
-![alt text](picsForREADME/app.png)
-
-2. on FacebookServer/controllers/posts.js you need to change here: 
-
-![alt text](picsForREADME/controller.png) 
-
-3. on FacebookServer/services/posts.js you need to change here: 
-
-![alt text](picsForREADME/service.png) 
+![alt text](picsForREADME/ENV.png)
 
 after you have done that make sure your tcp server is already running and continue. 
+
+also u can find your ip in linux running the command ifconfig
+
+![alt text](picsForREADME/iplinux.png)
+
 
 ## some remarks for part4 
 

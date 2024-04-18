@@ -5,7 +5,11 @@ const commentService = require('../services/comments');
 const mongoose = require('mongoose');
 const ObjectId = mongoose.Types.ObjectId;
 const net = require("net");
-const yourIp = "192.168.232.129"
+process.env.NODE_ENV = 'local';
+const customEnv = require('custom-env');
+customEnv.env(process.env.NODE_ENV, './config');
+const yourIp = process.env.IP;
+console.log(yourIp);
 
 
 
@@ -91,8 +95,8 @@ const createPost = async (newPost) => {
         });
       });
 
-      if (responseData != "2") {
-        return 1; // If any URL fails, stop processing and return null
+      if (responseData != "0") {
+        return 1; 
       }
     }
 
