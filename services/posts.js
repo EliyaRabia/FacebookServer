@@ -5,6 +5,7 @@ const commentService = require('../services/comments');
 const mongoose = require('mongoose');
 const ObjectId = mongoose.Types.ObjectId;
 const net = require("net");
+const yourIp = "192.168.232.129"
 
 
 
@@ -59,7 +60,7 @@ const createPost = async (newPost) => {
       // Wrap your socket logic inside a new Promise
       const responseData = await new Promise((resolve, reject) => {
         // Connect to your C++ server
-        client.connect(5555, "192.168.199.129", function () {
+        client.connect(5555, yourIp, function () {
           // replace "localhost" with your server's IP address
           console.log("Connected to C++ server");
 
