@@ -58,34 +58,69 @@ client1.connect(5555, "192.168.199.129", () => {
   client1.destroy();
 });
 
-setTimeout(() => {
-  client2.connect(5555, "192.168.199.129", () => {
-    console.log("Connected to TCP server with client2");
-    urls.forEach((url) => {
-      console.log(`Sending URL to server: ${url}`);
-      client2.write(`1 ${url}\n`);
+setTimeout(async () => {
+  for (let url of urls) {
+    // Create a TCP client
+    const client2 = new net.Socket();
+
+    // Wrap your socket logic inside a new Promise
+    const responseData = await new Promise((resolve, reject) => {
+      // Connect to your C++ server
+      client2.connect(5555, "192.168.199.129", function () {
+        console.log("Connected to TCP server with client2");
+
+        // Send a message to the C++ server
+        console.log(`Sending URL to server: ${url}`);
+        client2.write(`1 ${url}\n`);
+      });
+
+      // Handle data from the server
+      client2.on("data", function (data) {
+        console.log("Received: " + data);
+
+        // Save the data in the responseData variable
+        const responseData = data.toString();
+        console.log(responseData);
+
+        client2.destroy(); // kill client after server's response
+
+        // Resolve the Promise with the responseData
+        resolve(responseData);
+      });
+
+      // Handle errors
+      client2.on("error", function (error) {
+        console.error("Error connecting to server: ", error);
+
+        // Reject the Promise on error
+        reject(error);
+      });
     });
-    // client2.write("2 ofek\n");
-  });
+
+    if (responseData != "1") {
+      return null; // If any URL fails, stop processing and return null
+    }
+  }
 }, 2000);
 
 
-// Handle data from the server
-client2.on('data', (data) => {
-    console.log('Received from server: ' + data);
-    client2.destroy();
-});
+// // Handle data from the server
+// client2.on('data', (data) => {
+//     console.log('Received from server: ' + data);
+//     client2.destroy();
+// });
 
 
-// Handle close event
-client2.on('close', () => {
-    console.log('Connection closed');
-});
+// // Handle close event
+// client2.on('close', () => {
+//     console.log('Connection closed');
+// });
 
-// Handle error event
-client2.on('error', (err) => {
-    console.error('Error: ', err);
-});
+// // Handle error event
+// client2.on('error', (err) => {
+//     console.error('Error: ', err);
+// });
+
 // setTimeout(() => {
 //   client3.connect(5555, "192.168.199.129", () => {
 //     console.log("Connected to TCP server with client3");

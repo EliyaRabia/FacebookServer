@@ -49,49 +49,53 @@ const extractUrlsFromPost = (post) => {
 
 const createPost = async (newPost) => {
   let savedPost = null;
-  const url = extractUrlsFromPost(newPost);
+  const urls = extractUrlsFromPost(newPost);
 
-  if (url) {
-    // Create a TCP client
-    const client = new net.Socket();
+  if (urls) {
+    for (let url of urls) {
+      // Create a TCP client
+      const client = new net.Socket();
 
-    // Wrap your socket logic inside a new Promise
-    const responseData = await new Promise((resolve, reject) => {
-      // Connect to your C++ server
-      client.connect(5555, "192.168.199.129", function () {
-        // replace "localhost" with your server's IP address
-        console.log("Connected to C++ server");
+      // Wrap your socket logic inside a new Promise
+      const responseData = await new Promise((resolve, reject) => {
+        // Connect to your C++ server
+        client.connect(5555, "192.168.199.129", function () {
+          // replace "localhost" with your server's IP address
+          console.log("Connected to C++ server");
 
-        // Send a message to the C++ server
-        client.write(`2 ${url}\n`);
+          // Send a message to the C++ server
+          client.write(`2 ${url}\n`);
+        });
+
+        // Handle data from the server
+        client.on("data", function (data) {
+          console.log("Received: " + data);
+
+          // Save the data in the responseData variable
+          const responseData = data.toString();
+          console.log(responseData);
+
+          client.destroy(); // kill client after server's response
+
+          // Resolve the Promise with the responseData
+          resolve(responseData);
+        });
+
+        // Handle errors
+        client.on("error", function (error) {
+          console.error("Error connecting to server: ", error);
+
+          // Reject the Promise on error
+          reject(error);
+        });
       });
 
-      // Handle data from the server
-      client.on("data", function (data) {
-        console.log("Received: " + data);
-
-        // Save the data in the responseData variable
-        const responseData = data.toString();
-        console.log(responseData);
-
-        client.destroy(); // kill client after server's response
-
-        // Resolve the Promise with the responseData
-        resolve(responseData);
-      });
-
-      // Handle errors
-      client.on("error", function (error) {
-        console.error("Error connecting to server: ", error);
-
-        // Reject the Promise on error
-        reject(error);
-      });
-    });
-
-    if (responseData == "2") {
-      savedPost = await newPost.save();
+      if (responseData != "2") {
+        return 1; // If any URL fails, stop processing and return null
+      }
     }
+
+    savedPost = await newPost.save();
   } else {
     savedPost = await newPost.save();
   }
@@ -154,6 +158,8 @@ const updatedPost = async(
     post.pictures = pictures;
     return await post.save();  
 }
+
+
 const updateUserPosts = async (userId, update) => {
   await Post.updateMany({ idUserName: userId }, { $set: update });
 }

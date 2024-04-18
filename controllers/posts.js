@@ -4,6 +4,8 @@ const Post = require('../models/posts');
 const User = require('../models/users');
 const userService = require('../services/users');
 const commentService = require('../services/comments');
+const net = require("net");
+
 
 const get25Posts = async(req, res) => {
    let token = req.headers.authorization;
@@ -52,14 +54,17 @@ const createPost = async(req, res) => {
 
     });
     const post = await postService.createPost(newPost);
-    if (post) {
-        const user = await User.findById(idUserName);
-        user.postList.push(post._id);
-        await user.save();
-        res.status(200).json(post);
-    }
-    else{
-        res.status(404).send('Error creating post');
+    if (post == 1) {
+      console.log('post1');
+      res.status(300).send("Error url not found in BloomFilter");
+    } else if (post) {
+      const user = await User.findById(idUserName);
+      user.postList.push(post._id);
+      await user.save();
+      res.status(200).json(post);
+    } else {
+       console.log('post');
+      res.status(404).send("Error creating post");
     }
 }
 
@@ -79,29 +84,96 @@ const deletePost = async(req, res) => {
     }
 }
 
-const updatePost = async(req, res) => {
+const extractUrlsFromText = (initialText) => {
+  const urlRegex = /(https?:\/\/[^\s]+)/g;
+  const urls = initialText.match(urlRegex);
+  return urls;
+};
 
-    const idUserName = req.params.id;
-    const postId = req.params.pid;
-    const initialText = req.body.initialText;
-    const pictures = req.body.pictures;
-    const token = req.headers.authorization;
-    const decodedToken = tokendecode(token);
-    if (idUserName !== decodedToken.id) {
-      return res.status(403).send("You can only update your own posts");
+const updatePost = async (req, res) => {
+  const idUserName = req.params.id;
+  const postId = req.params.pid;
+  const initialText = req.body.initialText;
+  const pictures = req.body.pictures;
+  const token = req.headers.authorization;
+  const decodedToken = tokendecode(token);
+  if (idUserName !== decodedToken.id) {
+    return res.status(403).send("You can only update your own posts");
+  }
+
+  const post = await Post.findById(postId);
+  if (!post) return res.status(404).send("Error updating post");
+
+  const urls = extractUrlsFromText(initialText);
+
+  if (urls) {
+    for (let url of urls) {
+      // Create a TCP client
+      const client = new net.Socket();
+
+      // Wrap your socket logic inside a new Promise
+      const responseData = await new Promise((resolve, reject) => {
+        // Connect to your C++ server
+        client.connect(5555, "192.168.199.129", function () {
+          // replace "localhost" with your server's IP address
+          console.log("Connected to C++ server");
+
+          // Send a message to the C++ server
+          client.write(`2 ${url}\n`);
+        });
+
+        // Handle data from the server
+        client.on("data", function (data) {
+          console.log("Received: " + data);
+
+          // Save the data in the responseData variable
+          const responseData = data.toString();
+          console.log(responseData);
+          client.destroy(); // kill client after server's response
+
+          // Resolve the Promise with the responseData
+          resolve(responseData);
+        });
+
+        // Handle errors
+        client.on("error", function (error) {
+          console.error("Error connecting to server: ", error);
+
+          // Reject the Promise on error
+          reject(error);
+        });
+      });
+
+      if (responseData != "2") {
+        return res.status(300).send("Error url not found in BloomFilter");
+      }
     }
+
     const updatedPost = await postService.updatedPost(
       idUserName,
       postId,
       initialText,
-      pictures,
+      pictures
     );
     if (updatedPost) {
       res.status(200).send("post updated successfully");
     } else {
       res.status(404).send("Error updating post");
     }
-}
+  } else {
+    const updatedPost = await postService.updatedPost(
+      idUserName,
+      postId,
+      initialText,
+      pictures
+    );
+    if (updatedPost) {
+      res.status(200).send("post updated successfully");
+    } else {
+      res.status(404).send("Error updating post");
+    }
+  }
+};
 
 
 
