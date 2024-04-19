@@ -69,7 +69,7 @@ const createPost = async (newPost) => {
           console.log("Connected to C++ server");
 
           // Send a message to the C++ server
-          client.write(`2 ${url}\n`);
+             client.write(`2 ${url}\n`);
         });
 
         // Handle data from the server
@@ -95,8 +95,8 @@ const createPost = async (newPost) => {
         });
       });
 
-      if (responseData != "0") {
-        return 1; 
+      if (responseData == "2") {
+        return 1;
       }
     }
 

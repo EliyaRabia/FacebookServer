@@ -57,7 +57,6 @@ const createPost = async(req, res) => {
     });
     const post = await postService.createPost(newPost);
     if (post == 1) {
-      console.log('post1');
       res.status(300).send("Error url found in BloomFilter");
     } else if (post) {
       const user = await User.findById(idUserName);
@@ -65,7 +64,6 @@ const createPost = async(req, res) => {
       await user.save();
       res.status(200).json(post);
     } else {
-       console.log('post');
       res.status(404).send("Error creating post");
     }
 }
@@ -146,7 +144,7 @@ const updatePost = async (req, res) => {
         });
       });
 
-      if (responseData != "0") {
+      if (responseData == "2") {
         return res.status(300).send("Error url found in BloomFilter");
       }
     }
