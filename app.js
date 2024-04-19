@@ -13,16 +13,15 @@ process.env.NODE_ENV = 'local';
 const customEnv = require('custom-env');
 customEnv.env(process.env.NODE_ENV, './config');
 const urls = process.env.CONNECTION_URL.split(',');
-console.log(urls);
+//console.log(urls);
 const init = process.env.INITIALIZATION;
 const net = require('net');
-const yourIp = "192.168.232.129"
+const yourIp = process.env.IP;
 
 // Create a new TCP client
 const client1 = new net.Socket();
 const client2 = new net.Socket();
 const client3 = new net.Socket();
-
 
 client1.connect(5555, yourIp, () => {
   console.log("Connected to TCP server with client1");

@@ -5,9 +5,10 @@ const User = require('../models/users');
 const userService = require('../services/users');
 const commentService = require('../services/comments');
 const net = require("net");
-const yourIp = "192.168.232.129"
-
-
+process.env.NODE_ENV = 'local';
+const customEnv = require('custom-env');
+customEnv.env(process.env.NODE_ENV, './config');
+const yourIp = process.env.IP;
 const get25Posts = async(req, res) => {
    let token = req.headers.authorization;
    // If the token is prefixed with 'Bearer ', remove the prefix
@@ -57,7 +58,7 @@ const createPost = async(req, res) => {
     const post = await postService.createPost(newPost);
     if (post == 1) {
       console.log('post1');
-      res.status(300).send("Error url not found in BloomFilter");
+      res.status(300).send("Error url found in BloomFilter");
     } else if (post) {
       const user = await User.findById(idUserName);
       user.postList.push(post._id);
@@ -145,8 +146,8 @@ const updatePost = async (req, res) => {
         });
       });
 
-      if (responseData != "2") {
-        return res.status(300).send("Error url not found in BloomFilter");
+      if (responseData != "0") {
+        return res.status(300).send("Error url found in BloomFilter");
       }
     }
 
