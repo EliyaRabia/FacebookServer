@@ -41,7 +41,7 @@ also u can find your ip in linux running the command ifconfig
 
 In the env file that is in this repo you have some urls that will be inserted into the bloom filter (in CONNECTION_URL), and you also have its size and number of hash functions that are working on the insertion(in INITIALIZATION). 
 
-If you want to add some urls change the env file in CONNECTION_URL, each url must end with \n (look at those 6 examples that you already have there. also notice that each url is seperated by ',' ). 
+If you want to add some urls change the env file in CONNECTION_URL,Each URL need to be by our regax that means: this regular expression will match any string that starts with "http" or "https", followed by "://", followed by one or more non-whitespace characters. (look at those 6 examples that you already have there. also notice that each url is seperated by ',' ). 
 
 
 ## Here are 2 videos that show what our apps can do
