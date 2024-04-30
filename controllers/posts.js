@@ -9,6 +9,8 @@ process.env.NODE_ENV = 'local';
 const customEnv = require('custom-env');
 customEnv.env(process.env.NODE_ENV, './config');
 const yourIp = process.env.IP;
+const portBloom = process.env.PORT_BLOOM; 
+
 const get25Posts = async(req, res) => {
    let token = req.headers.authorization;
    // If the token is prefixed with 'Bearer ', remove the prefix
@@ -114,7 +116,7 @@ const updatePost = async (req, res) => {
       // Wrap your socket logic inside a new Promise
       const responseData = await new Promise((resolve, reject) => {
         // Connect to your C++ server
-        client.connect(5555, yourIp, function () {
+        client.connect(portBloom, yourIp, function () {
           // replace "localhost" with your server's IP address
           console.log("Connected to C++ server");
 
