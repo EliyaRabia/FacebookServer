@@ -7,7 +7,7 @@ Advanced Programming in BIU. this is a Node Js server so in order to run and use
 
 This Our React Facebook Repository: 
 
-https://github.com/orshmuel9/facebook/tree/Part3ConnectServer
+https://github.com/EliyaRabia/FacebookWeb/tree/Part3ConnectServer
 
 (U can also use out react app without clone react repository, u can only run the server and then enter to the web using the port of the server http://localhost:8080/ u can also change the port to whatever do you want in config -> .env.local)
 
