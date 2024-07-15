@@ -7,7 +7,7 @@ Advanced Programming in BIU. this is a Node Js server so in order to run and use
 
 This Our React Facebook Repository: 
 
-https://github.com/orshmuel9/facebook/tree/part4
+https://github.com/EliyaRabia/FacebookWeb/tree/part4
 
 (U can also use out react app without clone react repository, u can only run the server and then enter to the web using the port of the server http://localhost:8080/ u can also change the port to whatever do you want in config -> .env.local)
 
@@ -54,7 +54,7 @@ Android: https://www.youtube.com/watch?v=onclwdYc8EU
 
 In order to run this server you first need to clone this repo into your computer with the command:
 
-git clone -b part4 https://github.com/orshmuel9/FacebookServer.git 
+git clone -b part4 https://github.com/EliyaRabia/FacebookWeb
 
 Now you will also need to set up MongoDBCompass to work with this server, 
 Open MongoDBCompass and start by clicking connect when you have this url in the box: 
