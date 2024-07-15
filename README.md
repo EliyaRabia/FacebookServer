@@ -19,7 +19,7 @@ in the part4 of the project we were requested to connect our server into a tcp s
 so, in order to make sure everything works well together you must also run the tcp server,
 here is a link to its instructions that you must follow first: 
 
-https://github.com/ofekyem87biu/ex1/tree/part4   
+https://github.com/EliyaRabia/BlommFilter-and-TCP-Server/tree/part4   
 
 if you want to read more about the bloom filter tcp server or the webstie or the android app please enter their repos and read their ReadMe files!
 
