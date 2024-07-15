@@ -25,7 +25,7 @@ Android: https://www.youtube.com/watch?v=onclwdYc8EU
 
 In order to run this server you first need to clone this repo into your computer with the command:
 
-git clone https://github.com/orshmuel9/FacebookServer 
+git clone https://github.com/EliyaRabia/FacebookServer
 
 Now you will also need to set up MongoDBCompass to work with this server, 
 Open MongoDBCompass and start by clicking connect when you have this url in the box: 
